@@ -1,0 +1,95 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 18vw);
+  grid-template-rows: repeat(3, 18vw);
+  gap: 1vw;
+
+  /* gradient here */
+  --light-color: #37d5d6;
+  --medium-color: #593693;
+  --dark-color: #36096d;
+  --w: 80vw;
+  --degrees: 60deg;
+  --sinus: 0.866;
+  --gradient: repeating-linear-gradient(
+    var(--degrees),
+    var(--light-color),
+    var(--medium-color),
+    var(--dark-color),
+    var(--light-color) var(--w)
+  );
+
+  background-image: var(--gradient);
+  background-size: calc(var(--w) / var(--sinus)) 100%;
+
+  animation: passive-gradient 3s linear infinite forwards;
+}
+
+@keyframes passive-gradient {
+  0% {
+    background-position: calc(var(--w) / var(--sinus)) 0%;
+  }
+}
+
+@keyframes to-yellow {
+  0% {
+    --light-color: #de4daa;
+    --medium-color: #f6e227;
+    --dark-color: #f6d327;
+  }
+  10% {
+    --light-color: #de4daa;
+    --medium-color: #f6e227;
+    --dark-color: #f6d327;
+  }
+  100% {
+    --light-color: #37d5d6;
+    --medium-color: #593693;
+    --dark-color: #36096d;
+  }
+}
+
+@keyframes to-blue {
+  0% {
+    --light-color: #37d5d6;
+    --medium-color: #593693;
+    --dark-color: #36096d;
+  }
+  10% {
+    --light-color: #37d5d6;
+    --medium-color: #593693;
+    --dark-color: #36096d;
+  }
+  100% {
+    --light-color: #de4daa;
+    --medium-color: #f6e227;
+    --dark-color: #f6d327;
+  }
+}
+
+.cover {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  left: -310%;
+  top: -310%;
+  width: 300%;
+  height: 300%;
+  background-color: white;
+  border-radius: 18vw 0;
+  box-shadow: 0 0 1500px white;
+}
+
+@keyframes blank {
+  0% {
+    left: -310%;
+    top: -310%;
+  }
+  100% {
+    left: 100%;
+    top: 100%;
+  }
+}
+.grid > * {
+  background-color: transparent;
+}
