@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-game-element',
@@ -6,13 +6,5 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./game-element.component.css'],
 })
 export class GameElementComponent {
-  public isCircle: boolean = false;
-  @Output() public childClick = new EventEmitter();
-  elementClasses = {
-    isCross: !this.isCircle,
-  };
-
-  onClick() {
-    console.log('CLICK');
-  }
+  @Input() public myShape!: string;
 }

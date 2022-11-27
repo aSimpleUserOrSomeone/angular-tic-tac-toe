@@ -1,15 +1,47 @@
-<div [ngClass]="elementClasses" (click)="onClick()">
-  <svg
-    width="100%"
-    height="100%"
-    viewBox="0 0 10 10"
-    preserveAspectRatio="none"
-  >
-    <path
-      d="M 5 0 L 0 0 L 0 10 L 10 10 L 10 0 L 10 0 L 5 0 L 5 1 A 1 1 0 0 0 5 9 A 1 1 0 0 0 5 1 L 5 2 A 1 1 0 0 0 5 8 A 1 1 0 0 0 5 2"
-      vector-effect="non-scaling-stroke"
-      fill-rule="evenodd"
-      fill="#101010"
-    />
-  </svg>
+<div [ngSwitch]="myShape">
+  <div *ngSwitchCase="'circle'">
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 10 10"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M 5 0 L 0 0 L 0 10 L 10 10 L 10 0 L 10 0 L 5 0 L 5 1 A 1 1 0 0 0 5 9 A 1 1 0 0 0 5 1 L 5 2 A 1 1 0 0 0 5 8 A 1 1 0 0 0 5 2"
+        vector-effect="non-scaling-stroke"
+        fill-rule="evenodd"
+        fill="#101010"
+      />
+    </svg>
+  </div>
+  <div *ngSwitchCase="'cross'">
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 20 20"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M 4 2 A 1 1 0 0 0 2 4 L 8 10 L 2 16 A 1 1 0 0 0 4 18 L 10 12 L 16 18 A 1 1 0 0 0 18 16 L 12 10 L 18 4 A 1 1 0 0 0 16 2 L 10 8 L 4 2 L 4 0 L 0 0 L 0 20 L 20 20 L 20 0 L 4 0"
+        vector-effect="non-scaling-stroke"
+        fill-rule="evenodd"
+        fill="#101010"
+      />
+    </svg>
+  </div>
+  <div *ngSwitchDefault>
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 20 20"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M 20 0 L 0 0 L 0 20 L 20 20 L 20 0"
+        vector-effect="non-scaling-stroke"
+        fill-rule="evenodd"
+        fill="#101010"
+      />
+    </svg>
+  </div>
 </div>

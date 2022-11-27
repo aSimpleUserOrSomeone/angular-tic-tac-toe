@@ -1,4 +1,8 @@
-<div class="cover"></div>
 <div class="grid">
-  <app-game-element *ngFor="let item of gridValues"></app-game-element>
+  <app-game-element
+    *ngFor="let val of gridValues; let i = index"
+    [myShape]="val"
+    (click)="makeMove(i)"
+  ></app-game-element>
+  <div class="cover" [@showBlank]="animationState"></div>
 </div>
