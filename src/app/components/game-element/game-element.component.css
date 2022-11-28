@@ -7,6 +7,10 @@ div {
   background-color: transparent;
 }
 
+.emptySquare:hover {
+  cursor: pointer;
+}
+
 .isCircle {
 }
 

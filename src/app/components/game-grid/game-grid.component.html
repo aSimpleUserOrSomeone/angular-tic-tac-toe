@@ -1,4 +1,4 @@
-<div class="grid">
+<div class="grid" [@gradientChange]="gradientColor">
   <app-game-element
     *ngFor="let val of gridValues; let i = index"
     [myShape]="val"

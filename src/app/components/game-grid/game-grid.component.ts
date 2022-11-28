@@ -29,6 +29,25 @@ import {
       ),
       transition('start => end', [animate('1s')]),
     ]),
+    trigger('gradientChange', [
+      state(
+        'blue',
+        style({
+          '--light-color': '',
+          '--medium-color': '',
+          '--dark-color': '',
+        })
+      ),
+      state(
+        'red',
+        style({
+          '--light-color': '#cacaca',
+          '--medium-color': '#ababab',
+          '--dark-color': '#3f3f3f',
+        })
+      ),
+      transition('blue => red', [animate('0.3s')]),
+    ]),
   ],
 })
 export class GameGridComponent {
@@ -37,6 +56,10 @@ export class GameGridComponent {
   public gameState: string = 'game';
   public gridValues!: Array<string>;
   public animationInProgress: boolean = false;
+  public gradientColor: string = 'blue';
+  public lightColorVar: string = '#37d5d6';
+  public mediumColorVar: string = '#593693';
+  public darkColorVar: string = '#36096d';
 
   ngOnInit() {
     this.newGame();
@@ -47,6 +70,15 @@ export class GameGridComponent {
     this.gameState = 'game';
     this.xTurn = true;
     this.animationInProgress = false;
+    this.lightColorVar = '#37d5d6';
+    this.mediumColorVar = '#593693';
+    this.darkColorVar = '#36096d';
+  }
+
+  gradientRed() {
+    this.lightColorVar = '#37d5d6';
+    this.mediumColorVar = '#593693';
+    this.darkColorVar = '#36096d';
   }
 
   get player() {
