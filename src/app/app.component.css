@@ -1,7 +1,11 @@
 .centerd {
   width: fit-content;
   height: fit-content;
-  margin: 14vmax auto auto auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  will-change: transform;
+  transform: translate(-50%, -60%);
 }
 
 .centered > * {
