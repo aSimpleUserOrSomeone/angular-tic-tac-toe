@@ -2,10 +2,10 @@
   width: fit-content;
   height: fit-content;
   position: absolute;
-  top: 60%;
+  top: 50%;
   left: 50%;
   will-change: transform;
-  transform: translate(-50%, -45%);
+  transform: translate(-50%, -60%);
 }
 
 .centered > * {
