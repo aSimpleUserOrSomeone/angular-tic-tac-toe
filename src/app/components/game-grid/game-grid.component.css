@@ -33,42 +33,6 @@
   }
 }
 
-@keyframes to-yellow {
-  0% {
-    --light-color: #de4daa;
-    --medium-color: #f6e227;
-    --dark-color: #f6d327;
-  }
-  10% {
-    --light-color: #de4daa;
-    --medium-color: #f6e227;
-    --dark-color: #f6d327;
-  }
-  100% {
-    --light-color: #37d5d6;
-    --medium-color: #593693;
-    --dark-color: #36096d;
-  }
-}
-
-@keyframes to-blue {
-  0% {
-    --light-color: #37d5d6;
-    --medium-color: #593693;
-    --dark-color: #36096d;
-  }
-  10% {
-    --light-color: #37d5d6;
-    --medium-color: #593693;
-    --dark-color: #36096d;
-  }
-  100% {
-    --light-color: #de4daa;
-    --medium-color: #f6e227;
-    --dark-color: #f6d327;
-  }
-}
-
 .cover {
   z-index: 0;
   content: "";

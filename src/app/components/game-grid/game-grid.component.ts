@@ -29,25 +29,6 @@ import {
       ),
       transition('start => end', [animate('1s')]),
     ]),
-    trigger('gradientChange', [
-      state(
-        'blue',
-        style({
-          '--light-color': '',
-          '--medium-color': '',
-          '--dark-color': '',
-        })
-      ),
-      state(
-        'red',
-        style({
-          '--light-color': '#cacaca',
-          '--medium-color': '#ababab',
-          '--dark-color': '#3f3f3f',
-        })
-      ),
-      transition('blue => red', [animate('0.3s')]),
-    ]),
   ],
 })
 export class GameGridComponent {
@@ -56,10 +37,12 @@ export class GameGridComponent {
   public gameState: string = 'game';
   public gridValues!: Array<string>;
   public animationInProgress: boolean = false;
-  public gradientColor: string = 'blue';
-  public lightColorVar: string = '#37d5d6';
-  public mediumColorVar: string = '#593693';
-  public darkColorVar: string = '#36096d';
+  public colorsVar: any = {
+    lightColorVar: '#37d5d6',
+    mediumColorVar: '#593693',
+    darkColorVar: '#36096d',
+  };
+  public myGradient: string = '';
 
   ngOnInit() {
     this.newGame();
@@ -70,15 +53,34 @@ export class GameGridComponent {
     this.gameState = 'game';
     this.xTurn = true;
     this.animationInProgress = false;
-    this.lightColorVar = '#37d5d6';
-    this.mediumColorVar = '#593693';
-    this.darkColorVar = '#36096d';
+    this.colorsVar = {
+      lightColorVar: '#37d5d6',
+      mediumColorVar: '#593693',
+      darkColorVar: '#36096d',
+    };
   }
 
-  gradientRed() {
-    this.lightColorVar = '#37d5d6';
-    this.mediumColorVar = '#593693';
-    this.darkColorVar = '#36096d';
+  get lightC(): string {
+    return this.colorsVar.lightColorVar;
+  }
+  get mediumC(): string {
+    return this.colorsVar.mediumColorVar;
+  }
+  get darkC(): string {
+    return this.colorsVar.darkColorVar;
+  }
+
+  setGradient(wid: string = "80vw", degrees: string = '60deg') {
+    this.myGradient = "linear-gradient(30deg, 'red','yellow')";
+  }
+
+
+  setColorsRed() {
+    this.colorsVar = {
+      lightColorVar: '#de4daa',
+      mediumColorVar: '#f6e227',
+      darkColorVar: '#f6d327',
+    };
   }
 
   get player() {
