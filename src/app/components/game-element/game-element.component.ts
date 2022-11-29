@@ -6,5 +6,5 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./game-element.component.css'],
 })
 export class GameElementComponent {
-  @Input() public myShape!: string;
+  @Input() public myShape!: string | number;
 }

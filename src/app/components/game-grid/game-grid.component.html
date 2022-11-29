@@ -1,8 +1,9 @@
-<div class="grid">
+<div class="grid" [ngClass]="getGradientClass">
   <app-game-element
     *ngFor="let val of gridValues; let i = index"
     [myShape]="val"
     (click)="makeMove(i)"
+    id="square{i}"
   ></app-game-element>
   <div class="cover" [@showBlank]="animationState"></div>
 </div>

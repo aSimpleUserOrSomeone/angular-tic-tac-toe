@@ -1,8 +1,60 @@
 @import url("https://fonts.googleapis.com/css2?family=Chakra+Petch&display=swap");
+:root {
+  /* gradient here */
+  --light-blue: #37d5d6;
+  --medium-blue: #593693;
+  --dark-blue: #36096d;
+  --light-red: #fbd72b;
+  --medium-red: #bf3a30;
+  --dark-red: #b82e1f;
+  --light-gray: #f3e6e8;
+  --medium-gray: #e9ccba;
+  --dark-gray: #29314a;
+  --w: 80vw;
+  --degrees: 60deg;
+  --sinus: 0.866;
+
+  /* gradient here */
+  --blue-gradient: repeating-linear-gradient(
+    var(--degrees),
+    var(--light-blue),
+    var(--medium-blue),
+    var(--dark-blue),
+    var(--light-blue) var(--w)
+  );
+
+  /* gradient here */
+  --red-gradient: repeating-linear-gradient(
+    var(--degrees),
+    var(--light-red),
+    var(--medium-red),
+    var(--dark-red),
+    var(--light-red) var(--w)
+  );
+
+  /* gradient here */
+  --gray-gradient: repeating-linear-gradient(
+    var(--degrees),
+    var(--light-gray),
+    var(--medium-gray),
+    var(--dark-gray),
+    var(--light-gray) var(--w)
+  );
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html,
+body,
+app-root {
+  height: 100%;
+  width: 100%;
+
+  min-width: 360px;
 }
 
 body {

@@ -7,8 +7,6 @@ div {
   background-color: transparent;
 }
 
-.isCircle {
-}
-
-.isCross {
+.emptySquare:hover {
+  cursor: pointer;
 }

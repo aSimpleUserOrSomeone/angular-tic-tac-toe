@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {
   trigger,
   state,
@@ -6,6 +6,12 @@ import {
   animate,
   transition,
 } from '@angular/animations';
+import { ActivatedRoute } from '@angular/router';
+
+interface M {
+  index?: number;
+  score?: number;
+}
 
 @Component({
   selector: 'app-game-grid',
@@ -32,10 +38,10 @@ import {
   ],
 })
 export class GameGridComponent {
-  public playerSymbol: string = 'cross';
+  public playerSymbol!: string;
   public xTurn: boolean = true;
   public gameState: string = 'game';
-  public gridValues!: Array<string>;
+  public gridValues!: Array<string | number>;
   public animationInProgress: boolean = false;
 
   ngOnInit() {
@@ -43,75 +49,45 @@ export class GameGridComponent {
   }
 
   newGame() {
-    this.gridValues = Array(9).fill('');
+    this.playerSymbol = 'cross';
+    this.gridValues = Array(9);
+    for (let i = 0; i < this.gridValues.length; i++) {
+      this.gridValues[i] = i;
+    }
     this.gameState = 'game';
     this.xTurn = true;
     this.animationInProgress = false;
   }
 
   get player() {
-    return this.xTurn ? 'cross' : 'circle';
+    return this.playerSymbol;
   }
   get ai() {
-    return this.xTurn ? 'circle' : 'cross';
+    return this.playerSymbol == 'cross' ? 'circle' : 'cross';
   }
+  get getGradientClass(): string {
+    if (this.gameState == 'game') {
+      return 'blue-gradient';
+    } else if (this.gameState == 'aiWin') {
+      return 'red-gradient';
+    } else if (this.gameState == 'tie') {
+      return 'gray-gradient';
+    }
 
+    return '';
+  }
+  get animationState() {
+    return this.animationInProgress ? 'end' : 'start';
+  }
   animationToggle() {
     this.animationInProgress = !this.animationInProgress;
     setTimeout(() => {
       this.animationInProgress = !this.animationInProgress;
+      // this.aiMakeMove();
     }, 1000);
   }
 
-  get animationState() {
-    return this.animationInProgress ? 'end' : 'start';
-  }
-
-  makeMove(idSquare: number) {
-    if (
-      this.gridValues[idSquare] == '' &&
-      this.gameState == 'game' &&
-      !this.animationInProgress
-    ) {
-      this.animationToggle();
-      setTimeout(() => {
-        this.gridValues.splice(idSquare, 1, this.player);
-        this.xTurn = !this.xTurn;
-        this.gameState = this.calculateWin(this.gridValues, this.ai);
-      }, 300);
-    }
-  }
-
-  minimax = (newBoard: Array<string>, nowPlaying: string): any => {
-    //calculate empty squares/possibilities
-    const maxDepth = newBoard.reduce((total, v) => total + Number(v == ''), 0);
-
-    if (this.calculateWin(newBoard, this.player) == 'playerWin') {
-      return { score: -10 };
-    } else if (this.calculateWin(newBoard, this.ai) == 'aiWin') {
-      return { score: 10 };
-    } else if (maxDepth === 0) {
-      return { score: 0 };
-    }
-
-    for (let i = 0; i < maxDepth; i++) {
-      var move: object = {};
-      //https://www.freecodecamp.org/news/how-to-make-your-tic-tac-toe-game-unbeatable-by-using-the-minimax-algorithm-9d690bad4b37/
-    }
-  };
-  aiMakeMove() {
-    let squareID: number = 0;
-    var moves: object = {};
-  }
-
-  startAnimation() {
-    this.animationInProgress = true;
-    setTimeout(() => {
-      this.animationInProgress = false;
-    }, 1000);
-  }
-
-  calculateWin(board: Array<string>, symbol: string): string {
+  checkBoardState(board: Array<string | number>): string {
     //od docs z angulara
     const lines = [
       [0, 1, 2],
@@ -126,16 +102,101 @@ export class GameGridComponent {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        if (symbol == this.ai) {
+        if (board[a] == this.ai) {
           return 'aiWin';
-        } else if (symbol == this.player) {
+        } else if (board[a] == this.player) {
           return 'playerWin';
         }
       }
     }
-    if (this.gridValues.every((v) => v != '')) {
+    if (this.gridValues.every((v) => typeof v != 'number')) {
       return 'tie';
     }
     return 'game';
+  }
+
+  makeMove(idSquare: number) {
+    if (
+      this.gridValues[idSquare] != 'circle' &&
+      this.gridValues[idSquare] != 'square' &&
+      this.gameState == 'game' &&
+      !this.animationInProgress
+    ) {
+      this.animationToggle();
+      setTimeout(() => {
+        this.gridValues.splice(idSquare, 1, this.player);
+        this.xTurn = !this.xTurn;
+        this.gameState = this.checkBoardState(this.gridValues);
+        console.log(this.gameState);
+      }, 300);
+    }
+  }
+
+  getEmptySquareIndexes(oldArray: Array<string | number>): Array<number> {
+    const a: Array<number> = oldArray.filter(
+      (e) => typeof e == 'number'
+    ) as Array<number>;
+
+    return a;
+  }
+
+  minimax = (newBoard: Array<string | number>, nowPlaying: string): any => {
+    //calculate empty squares/possibilities
+    var emptySquares: Array<number> = this.getEmptySquareIndexes(newBoard);
+
+    if (this.checkBoardState(newBoard) == 'playerWin') {
+      return { score: -10 };
+    } else if (this.checkBoardState(newBoard) == 'aiWin') {
+      return { score: 10 };
+    } else if (emptySquares.length === 0) {
+      return { score: 0 };
+    }
+
+    var moves = [];
+    for (let i = 0; i < emptySquares.length; i++) {
+      var move: M = {};
+      move.index = emptySquares[i];
+      newBoard[emptySquares[i]] = nowPlaying;
+
+      if (nowPlaying == this.ai) {
+        var res = this.minimax(newBoard, this.player);
+        move.score = res.score;
+      } else {
+        var res = this.minimax(newBoard, this.ai);
+        move.score = res.score;
+      }
+
+      newBoard[emptySquares[i]] = emptySquares[i];
+
+      moves.push(move);
+    }
+
+    var bestMove!: M;
+    if (nowPlaying == this.ai) {
+      var bestScore = -1000;
+      for (let i = 0; i < moves.length; i++) {
+        if (moves[i].score! > bestScore) {
+          bestScore = moves[i].score as number;
+          bestMove = moves[i];
+        }
+      }
+    } else {
+      var bestScore: number = 1000;
+      for (let i = 0; i < moves.length; i++) {
+        if (moves[i].score! < bestScore) {
+          bestScore = moves[i].score as number;
+          bestMove = moves[i];
+        }
+      }
+    }
+
+    return bestMove;
+  };
+
+  aiMakeMove() {
+    let squareID: number = this.minimax(this.gridValues, this.ai).index;
+    const squareAiClick: HTMLElement = document.querySelector(
+      `square${squareID}`
+    ) as HTMLElement;
   }
 }
