@@ -6,7 +6,6 @@ import {
   animate,
   transition,
 } from '@angular/animations';
-import { ActivatedRoute } from '@angular/router';
 
 interface M {
   index?: number;
