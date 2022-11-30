@@ -20,7 +20,7 @@ button:hover {
   cursor: pointer;
   color: var(--light-gray);
   border-color: var(--light-gray);
-  box-shadow: 0 0 1.25em -0.1em var(--medium-gray);
+  box-shadow: 0 0 0.5em -0.5em var(--medium-gray);
 }
 
 button:active {

@@ -43,12 +43,6 @@ export class GameGridComponent {
   public gameState: string = 'game';
   public gridValues!: Array<string | number>;
   public animationInProgress: boolean = false;
-  public colorsVar: any = {
-    lightColorVar: '#37d5d6',
-    mediumColorVar: '#593693',
-    darkColorVar: '#36096d',
-  };
-  public myGradient: string = '';
 
   ngOnInit() {
     this.newGame();
@@ -63,34 +57,6 @@ export class GameGridComponent {
     this.gameState = 'game';
     this.xTurn = true;
     this.animationInProgress = false;
-    this.colorsVar = {
-      lightColorVar: '#37d5d6',
-      mediumColorVar: '#593693',
-      darkColorVar: '#36096d',
-    };
-  }
-
-  get lightC(): string {
-    return this.colorsVar.lightColorVar;
-  }
-  get mediumC(): string {
-    return this.colorsVar.mediumColorVar;
-  }
-  get darkC(): string {
-    return this.colorsVar.darkColorVar;
-  }
-
-  setGradient(wid: string = "80vw", degrees: string = '60deg') {
-    this.myGradient = "linear-gradient(30deg, 'red','yellow')";
-  }
-
-
-  setColorsRed() {
-    this.colorsVar = {
-      lightColorVar: '#de4daa',
-      mediumColorVar: '#f6e227',
-      darkColorVar: '#f6d327',
-    };
   }
 
   get player() {
@@ -102,7 +68,7 @@ export class GameGridComponent {
   get getGradientClass(): string {
     if (this.gameState == 'game') {
       return 'blue-gradient';
-    } else if (this.gameState == 'aiWin') {
+    } else if (this.gameState == 'aiWin' || this.gameState == 'playerWin') {
       return 'red-gradient';
     } else if (this.gameState == 'tie') {
       return 'gray-gradient';
