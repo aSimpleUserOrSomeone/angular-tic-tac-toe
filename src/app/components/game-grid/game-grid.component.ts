@@ -132,15 +132,14 @@ export class GameGridComponent {
   }
 
   getEmptySquareIndexes(oldArray: Array<string | number>): Array<number> {
-    const a: Array<number> = oldArray.filter(
+    const filteredArray: Array<number> = oldArray.filter(
       (e) => typeof e == 'number'
     ) as Array<number>;
 
-    return a;
+    return filteredArray;
   }
 
   minimax = (newBoard: Array<string | number>, nowPlaying: string): any => {
-    //calculate empty squares/possibilities
     var emptySquares: Array<number> = this.getEmptySquareIndexes(newBoard);
 
     if (this.checkBoardState(newBoard) == 'playerWin') {
