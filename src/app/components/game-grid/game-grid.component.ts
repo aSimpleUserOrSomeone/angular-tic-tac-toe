@@ -169,7 +169,7 @@ export class GameGridComponent {
       moves.push(move);
     }
 
-    var bestMove!: M;
+    var bestMove: M = {};
     if (nowPlaying == this.ai) {
       var bestScore = -1000;
       for (let i = 0; i < moves.length; i++) {
