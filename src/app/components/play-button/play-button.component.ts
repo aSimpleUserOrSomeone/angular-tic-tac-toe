@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-play-button',
@@ -7,6 +7,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 })
 export class PlayButtonComponent {
   @Output() buttonEmitter: EventEmitter<string> = new EventEmitter<string>();
+  @Input() importedGameState: string = 'game';
 
   clickedButton() {
     this.buttonEmitter.emit('playButtonClicked');

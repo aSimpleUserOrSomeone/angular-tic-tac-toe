@@ -3,16 +3,17 @@ button {
   box-shadow: 0 0 1em 0.25em transparent;
 
   background-image: var(--blue-gradient);
-  background-size: var(--w) auto;
+  background-size: calc(var(--w) / var(--sinus)) 100%;
   -webkit-background-clip: text;
   color: transparent;
 
   font-size: 42px;
   font-weight: 375;
   padding: 0.25em 0.7em;
+  user-select: none;
 
   position: relative;
-  top: 20%;
+  top: 15%;
   left: 50%;
 
   transform: translate(-50%, -50%);
@@ -26,6 +27,16 @@ button {
   0% {
     background-position: calc(var(--w) / var(--sinus)) 0%;
   }
+}
+
+.buttonGradientBlue {
+  background-image: var(--blue-gradient);
+}
+.buttonGradientRed {
+  background-image: var(--red-gradient);
+}
+.buttonGradientGray {
+  background-image: var(--gray-gradient);
 }
 
 button:hover {
