@@ -87,7 +87,7 @@ export class GameGridComponent {
     setTimeout(() => {
       this.animationInProgress = !this.animationInProgress;
       if (this.whoseTurn == this.ai) this.aiMakeMove();
-    }, 1000);
+    }, 999);
   }
 
   checkBoardState(board: Array<string | number>): string {
@@ -202,12 +202,8 @@ export class GameGridComponent {
 
   aiMakeMove() {
     console.log('AI move');
-    let squareID: number = this.minimax(this.gridValues, this.ai)
+    const squareID: number = this.minimax(this.gridValues, this.ai)
       .index as number;
-    const squareAiClick: HTMLElement = document.querySelector(
-      `#square${squareID}`
-    ) as HTMLElement;
-    console.log(squareID);
-    squareAiClick.click();
-  }
+    this.makeMove(squareID)
+    }
 }
