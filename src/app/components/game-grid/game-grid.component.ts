@@ -75,6 +75,10 @@ export class GameGridComponent {
 
     return '';
   }
+
+  get whoseTurn() {
+    return this.xTurn ? 'cross' : 'circle';
+  }
   get animationState() {
     return this.animationInProgress ? 'end' : 'start';
   }
@@ -82,7 +86,7 @@ export class GameGridComponent {
     this.animationInProgress = !this.animationInProgress;
     setTimeout(() => {
       this.animationInProgress = !this.animationInProgress;
-      // this.aiMakeMove();
+      this.aiMakeMove();
     }, 1000);
   }
 
@@ -114,19 +118,18 @@ export class GameGridComponent {
     return 'game';
   }
 
-  makeMove(idSquare: number) {
+  makeMove(idSquare: number): void {
     if (
       this.gridValues[idSquare] != 'circle' &&
-      this.gridValues[idSquare] != 'square' &&
+      this.gridValues[idSquare] != 'cross' &&
       this.gameState == 'game' &&
       !this.animationInProgress
     ) {
       this.animationToggle();
       setTimeout(() => {
-        this.gridValues.splice(idSquare, 1, this.player);
+        this.gridValues.splice(idSquare, 1, this.whoseTurn);
         this.xTurn = !this.xTurn;
         this.gameState = this.checkBoardState(this.gridValues);
-        console.log(this.gameState);
       }, 300);
     }
   }
@@ -139,28 +142,32 @@ export class GameGridComponent {
     return filteredArray;
   }
 
-  minimax = (newBoard: Array<string | number>, nowPlaying: string): any => {
+  minimax = (newBoard: Array<string | number>, nowPlaying: string): M => {
     var emptySquares: Array<number> = this.getEmptySquareIndexes(newBoard);
 
+    //check if final position
     if (this.checkBoardState(newBoard) == 'playerWin') {
-      return { score: -10 };
+      const tmp: M = { score: -10 };
+      return tmp;
     } else if (this.checkBoardState(newBoard) == 'aiWin') {
-      return { score: 10 };
-    } else if (emptySquares.length === 0) {
-      return { score: 0 };
+      const tmp: M = { score: 10 };
+      return tmp;
+    } else if (this.checkBoardState(newBoard) == 'tie') {
+      const tmp: M = { score: 0 };
+      return tmp;
     }
 
     var moves = [];
     for (let i = 0; i < emptySquares.length; i++) {
-      var move: M = {};
+      const move: M = {};
       move.index = emptySquares[i];
       newBoard[emptySquares[i]] = nowPlaying;
 
       if (nowPlaying == this.ai) {
-        var res = this.minimax(newBoard, this.player);
+        const res = this.minimax(newBoard, this.player);
         move.score = res.score;
       } else {
-        var res = this.minimax(newBoard, this.ai);
+        const res = this.minimax(newBoard, this.ai);
         move.score = res.score;
       }
 
@@ -192,9 +199,13 @@ export class GameGridComponent {
   };
 
   aiMakeMove() {
-    let squareID: number = this.minimax(this.gridValues, this.ai).index;
+    console.log('AI move');
+    let squareID: number = this.minimax(this.gridValues, this.ai)
+      .index as number;
     const squareAiClick: HTMLElement = document.querySelector(
       `square${squareID}`
     ) as HTMLElement;
+    console.log(squareID);
+    this.xTurn = !this.xTurn;
   }
 }
