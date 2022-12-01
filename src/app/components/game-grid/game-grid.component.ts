@@ -86,7 +86,7 @@ export class GameGridComponent {
     this.animationInProgress = !this.animationInProgress;
     setTimeout(() => {
       this.animationInProgress = !this.animationInProgress;
-      this.aiMakeMove();
+      if (this.whoseTurn == this.ai) this.aiMakeMove();
     }, 1000);
   }
 
@@ -127,6 +127,7 @@ export class GameGridComponent {
     ) {
       this.animationToggle();
       setTimeout(() => {
+        console.log(`whose turn: ${this.whoseTurn}`);
         this.gridValues.splice(idSquare, 1, this.whoseTurn);
         this.xTurn = !this.xTurn;
         this.gameState = this.checkBoardState(this.gridValues);
@@ -195,6 +196,7 @@ export class GameGridComponent {
       }
     }
 
+    // console.log(moves);
     return bestMove;
   };
 
@@ -203,9 +205,9 @@ export class GameGridComponent {
     let squareID: number = this.minimax(this.gridValues, this.ai)
       .index as number;
     const squareAiClick: HTMLElement = document.querySelector(
-      `square${squareID}`
+      `#square${squareID}`
     ) as HTMLElement;
     console.log(squareID);
-    this.xTurn = !this.xTurn;
+    squareAiClick.click();
   }
 }
