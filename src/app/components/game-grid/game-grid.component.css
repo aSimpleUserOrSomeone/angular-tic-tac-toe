@@ -1,7 +1,10 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 18vmin);
-  grid-template-rows: repeat(3, 18vmin);
+  width: 50vmin;
+  max-width: 340px;
+  aspect-ratio: 1;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 1vmin;
   position: relative;
   overflow: hidden;
@@ -30,7 +33,7 @@
 
 .cover {
   z-index: 0;
-  content: "";
+  content: '';
   position: absolute;
   left: -310%;
   top: -310%;

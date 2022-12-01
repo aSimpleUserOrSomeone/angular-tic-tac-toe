@@ -86,8 +86,10 @@ export class GameGridComponent {
     this.animationInProgress = !this.animationInProgress;
     setTimeout(() => {
       this.animationInProgress = !this.animationInProgress;
+    }, 1000);
+    setTimeout(() => {
       if (this.whoseTurn == this.ai) this.aiMakeMove();
-    }, 999);
+    }, 1001);
   }
 
   checkBoardState(board: Array<string | number>): string {
@@ -127,7 +129,6 @@ export class GameGridComponent {
     ) {
       this.animationToggle();
       setTimeout(() => {
-        console.log(`whose turn: ${this.whoseTurn}`);
         this.gridValues.splice(idSquare, 1, this.whoseTurn);
         this.xTurn = !this.xTurn;
         this.gameState = this.checkBoardState(this.gridValues);
@@ -182,7 +183,7 @@ export class GameGridComponent {
       var bestScore = -1000;
       for (let i = 0; i < moves.length; i++) {
         if (moves[i].score! > bestScore) {
-          bestScore = moves[i].score as number;
+          bestScore = (moves[i].score as number) - emptySquares.length;
           bestMove = moves[i];
         }
       }
@@ -190,13 +191,12 @@ export class GameGridComponent {
       var bestScore: number = 1000;
       for (let i = 0; i < moves.length; i++) {
         if (moves[i].score! < bestScore) {
-          bestScore = moves[i].score as number;
+          bestScore = (moves[i].score as number) + emptySquares.length;
           bestMove = moves[i];
         }
       }
     }
 
-    // console.log(moves);
     return bestMove;
   };
 
@@ -204,6 +204,6 @@ export class GameGridComponent {
     console.log('AI move');
     const squareID: number = this.minimax(this.gridValues, this.ai)
       .index as number;
-    this.makeMove(squareID)
-    }
+    this.makeMove(squareID);
+  }
 }
