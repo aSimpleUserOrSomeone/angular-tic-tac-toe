@@ -6,6 +6,8 @@ import {
   animate,
   transition,
 } from '@angular/animations';
+import { EMPTY_OBSERVER } from 'rxjs/internal/Subscriber';
+import { empty } from 'rxjs';
 
 interface M {
   index?: number;
@@ -75,13 +77,13 @@ export class GameGridComponent {
 
     return '';
   }
-
   get whoseTurn() {
     return this.xTurn ? 'cross' : 'circle';
   }
   get animationState() {
     return this.animationInProgress ? 'end' : 'start';
   }
+
   animationToggle() {
     this.animationInProgress = !this.animationInProgress;
     setTimeout(() => {
@@ -144,66 +146,59 @@ export class GameGridComponent {
     return filteredArray;
   }
 
-  minimax = (newBoard: Array<string | number>, nowPlaying: string): M => {
-    var emptySquares: Array<number> = this.getEmptySquareIndexes(newBoard);
+  minimax(
+    board: Array<string | number>,
+    depth: number,
+    isMaximizingAI: boolean
+  ): M {
+    //check for terminal state
 
-    //check if final position
-    if (this.checkBoardState(newBoard) == 'playerWin') {
-      const tmp: M = { score: -10 };
-      return tmp;
-    } else if (this.checkBoardState(newBoard) == 'aiWin') {
-      const tmp: M = { score: 10 };
-      return tmp;
-    } else if (this.checkBoardState(newBoard) == 'tie') {
-      const tmp: M = { score: 0 };
-      return tmp;
-    }
+    const boardState = this.checkBoardState(board);
 
-    var moves = [];
-    for (let i = 0; i < emptySquares.length; i++) {
-      const move: M = {};
-      move.index = emptySquares[i];
-      newBoard[emptySquares[i]] = nowPlaying;
-
-      if (nowPlaying == this.ai) {
-        const res = this.minimax(newBoard, this.player);
-        move.score = res.score;
-      } else {
-        const res = this.minimax(newBoard, this.ai);
-        move.score = res.score;
+    if (boardState != 'game') {
+      if (boardState == 'aiWin') {
+        let tmp: M = { score: 100 - depth };
+        return tmp;
+      } else if (boardState == 'playerWin') {
+        let tmp: M = { score: -100 + depth };
+        return tmp;
+      } else if (boardState == 'tie') {
+        let tmp: M = { score: 0 };
+        return tmp;
       }
-
-      newBoard[emptySquares[i]] = emptySquares[i];
-
-      moves.push(move);
     }
-
-    var bestMove: M = {};
-    if (nowPlaying == this.ai) {
-      var bestScore = -1000;
-      for (let i = 0; i < moves.length; i++) {
-        if (moves[i].score! > bestScore) {
-          bestScore = (moves[i].score as number) - emptySquares.length;
-          bestMove = moves[i];
-        }
+    const emptyIndexies = this.getEmptySquareIndexes(board);
+    if (isMaximizingAI) {
+      //means this is evaluating AI's best decision
+      let bestMove: M = { score: -10000 };
+      for (const emptyIndex of emptyIndexies) {
+        board[emptyIndex] = this.ai;
+        let newMove = this.minimax(board, depth + 1, !isMaximizingAI);
+        board[emptyIndex] = emptyIndex;
+        newMove.index = emptyIndex;
+        if (newMove.score! > bestMove.score!) bestMove = newMove;
       }
+      return bestMove;
     } else {
-      var bestScore: number = 1000;
-      for (let i = 0; i < moves.length; i++) {
-        if (moves[i].score! < bestScore) {
-          bestScore = (moves[i].score as number) + emptySquares.length;
-          bestMove = moves[i];
-        }
+      //this is evaluating players decision that can be worst for the ai
+      let bestMove: M = { score: 10000 };
+      for (const emptyIndex of emptyIndexies) {
+        board[emptyIndex] = this.player;
+        let newMove = this.minimax(board, depth + 1, !isMaximizingAI);
+        board[emptyIndex] = emptyIndex;
+        newMove.index = emptyIndex;
+        if (newMove.score! < bestMove.score!) bestMove = newMove;
       }
+
+      return bestMove;
     }
-
-    return bestMove;
-  };
-
+  }
   aiMakeMove() {
     console.log('AI move');
-    const squareID: number = this.minimax(this.gridValues, this.ai)
-      .index as number;
-    this.makeMove(squareID);
+    const bestMove: M = this.minimax(this.gridValues, 0, true);
+
+    console.log(bestMove);
+
+    this.makeMove(bestMove.index!);
   }
 }
