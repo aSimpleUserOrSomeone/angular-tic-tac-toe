@@ -3,7 +3,7 @@
     *ngFor="let val of gridValues; let i = index"
     [myShape]="val"
     (click)="makeMove(i)"
-    id="square{i}"
+    id="square{{ i }}"
   ></app-game-element>
   <div class="cover" [@showBlank]="animationState"></div>
 </div>

@@ -1,31 +1,56 @@
 button {
   border: #4f4f4f 0.25vmin solid;
-  box-shadow: 0 0 2em -0.1em transparent;
-  background-color: transparent;
+  box-shadow: 0 0 1em 0.25em transparent;
+
+  background-image: var(--blue-gradient);
+  background-size: calc(var(--w) / var(--sinus)) 100%;
+  -webkit-background-clip: text;
+  color: transparent;
+
   font-size: 42px;
   font-weight: 375;
   padding: 0.25em 0.7em;
+  user-select: none;
 
   position: relative;
-  top: 20%;
+  top: 15%;
   left: 50%;
 
   transform: translate(-50%, -50%);
 
-  color: var(--light-blue);
   transition: 0.3s box-shadow, 0.3s border-color, 0.3s color;
+
+  animation: passive-gradient 3s linear infinite forwards;
+}
+
+@keyframes passive-gradient {
+  0% {
+    background-position: calc(var(--w) / var(--sinus)) 0%;
+  }
+}
+
+.buttonGradientBlue {
+  background-image: var(--blue-gradient);
+}
+.buttonGradientRed {
+  background-image: var(--red-gradient);
+}
+.buttonGradientGray {
+  background-image: var(--gray-gradient);
 }
 
 button:hover {
   cursor: pointer;
   color: var(--light-gray);
   border-color: var(--light-gray);
-  box-shadow: 0 0 0.5em -0.5em var(--medium-gray);
+  box-shadow: 0 0 1em -0.5em var(--medium-gray);
 }
 
 button:active {
   color: #4f4f4f;
   background-color: var(--light-gray);
+  background-image: none;
+  -webkit-background-clip: border-box;
   border-color: #101010;
-  box-shadow: 0 0 1.25em -0.1em var(--medium-gray);
+  box-shadow: 0 0 1em -0.75em var(--medium-gray);
 }

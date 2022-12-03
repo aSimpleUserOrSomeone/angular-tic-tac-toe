@@ -1,7 +1,7 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 18vmin);
-  grid-template-rows: repeat(3, 18vmin);
+  grid-template-columns: repeat(3, 17vmin);
+  grid-template-rows: repeat(3, 17vmin);
   gap: 1vmin;
   position: relative;
   overflow: hidden;

@@ -6,7 +6,8 @@ import {
   animate,
   transition,
 } from '@angular/animations';
-import { ActivatedRoute } from '@angular/router';
+import { EMPTY_OBSERVER } from 'rxjs/internal/Subscriber';
+import { empty } from 'rxjs';
 
 interface M {
   index?: number;
@@ -76,15 +77,21 @@ export class GameGridComponent {
 
     return '';
   }
+  get whoseTurn() {
+    return this.xTurn ? 'cross' : 'circle';
+  }
   get animationState() {
     return this.animationInProgress ? 'end' : 'start';
   }
+
   animationToggle() {
     this.animationInProgress = !this.animationInProgress;
     setTimeout(() => {
       this.animationInProgress = !this.animationInProgress;
-      // this.aiMakeMove();
     }, 1000);
+    setTimeout(() => {
+      if (this.whoseTurn == this.ai) this.aiMakeMove();
+    }, 1001);
   }
 
   checkBoardState(board: Array<string | number>): string {
@@ -115,88 +122,83 @@ export class GameGridComponent {
     return 'game';
   }
 
-  makeMove(idSquare: number) {
+  makeMove(idSquare: number): void {
     if (
       this.gridValues[idSquare] != 'circle' &&
-      this.gridValues[idSquare] != 'square' &&
+      this.gridValues[idSquare] != 'cross' &&
       this.gameState == 'game' &&
       !this.animationInProgress
     ) {
       this.animationToggle();
       setTimeout(() => {
-        this.gridValues.splice(idSquare, 1, this.player);
+        this.gridValues.splice(idSquare, 1, this.whoseTurn);
         this.xTurn = !this.xTurn;
         this.gameState = this.checkBoardState(this.gridValues);
-        console.log(this.gameState);
       }, 300);
     }
   }
 
   getEmptySquareIndexes(oldArray: Array<string | number>): Array<number> {
-    const a: Array<number> = oldArray.filter(
+    const filteredArray: Array<number> = oldArray.filter(
       (e) => typeof e == 'number'
     ) as Array<number>;
 
-    return a;
+    return filteredArray;
   }
 
-  minimax = (newBoard: Array<string | number>, nowPlaying: string): any => {
-    //calculate empty squares/possibilities
-    var emptySquares: Array<number> = this.getEmptySquareIndexes(newBoard);
+  minimax(
+    board: Array<string | number>,
+    depth: number,
+    isMaximizingAI: boolean
+  ): M {
+    //check for terminal state
 
-    if (this.checkBoardState(newBoard) == 'playerWin') {
-      return { score: -10 };
-    } else if (this.checkBoardState(newBoard) == 'aiWin') {
-      return { score: 10 };
-    } else if (emptySquares.length === 0) {
-      return { score: 0 };
-    }
+    const boardState = this.checkBoardState(board);
 
-    var moves = [];
-    for (let i = 0; i < emptySquares.length; i++) {
-      var move: M = {};
-      move.index = emptySquares[i];
-      newBoard[emptySquares[i]] = nowPlaying;
-
-      if (nowPlaying == this.ai) {
-        var res = this.minimax(newBoard, this.player);
-        move.score = res.score;
-      } else {
-        var res = this.minimax(newBoard, this.ai);
-        move.score = res.score;
+    if (boardState != 'game') {
+      if (boardState == 'aiWin') {
+        let tmp: M = { score: 100 - depth };
+        return tmp;
+      } else if (boardState == 'playerWin') {
+        let tmp: M = { score: -100 + depth };
+        return tmp;
+      } else if (boardState == 'tie') {
+        let tmp: M = { score: 0 };
+        return tmp;
       }
-
-      newBoard[emptySquares[i]] = emptySquares[i];
-
-      moves.push(move);
     }
-
-    var bestMove!: M;
-    if (nowPlaying == this.ai) {
-      var bestScore = -1000;
-      for (let i = 0; i < moves.length; i++) {
-        if (moves[i].score! > bestScore) {
-          bestScore = moves[i].score as number;
-          bestMove = moves[i];
-        }
+    const emptyIndexies = this.getEmptySquareIndexes(board);
+    if (isMaximizingAI) {
+      //means this is evaluating AI's best decision
+      let bestMove: M = { score: -10000 };
+      for (const emptyIndex of emptyIndexies) {
+        board[emptyIndex] = this.ai;
+        let newMove = this.minimax(board, depth + 1, !isMaximizingAI);
+        board[emptyIndex] = emptyIndex;
+        newMove.index = emptyIndex;
+        if (newMove.score! > bestMove.score!) bestMove = newMove;
       }
+      return bestMove;
     } else {
-      var bestScore: number = 1000;
-      for (let i = 0; i < moves.length; i++) {
-        if (moves[i].score! < bestScore) {
-          bestScore = moves[i].score as number;
-          bestMove = moves[i];
-        }
+      //this is evaluating players decision that can be worst for the ai
+      let bestMove: M = { score: 10000 };
+      for (const emptyIndex of emptyIndexies) {
+        board[emptyIndex] = this.player;
+        let newMove = this.minimax(board, depth + 1, !isMaximizingAI);
+        board[emptyIndex] = emptyIndex;
+        newMove.index = emptyIndex;
+        if (newMove.score! < bestMove.score!) bestMove = newMove;
       }
+
+      return bestMove;
     }
-
-    return bestMove;
-  };
-
+  }
   aiMakeMove() {
-    let squareID: number = this.minimax(this.gridValues, this.ai).index;
-    const squareAiClick: HTMLElement = document.querySelector(
-      `square${squareID}`
-    ) as HTMLElement;
+    console.log('AI move');
+    const bestMove: M = this.minimax(this.gridValues, 0, true);
+
+    console.log(bestMove);
+
+    this.makeMove(bestMove.index!);
   }
 }

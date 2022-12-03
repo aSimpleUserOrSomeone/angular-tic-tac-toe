@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-play-button',
@@ -6,9 +6,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./play-button.component.css'],
 })
 export class PlayButtonComponent {
-  @Output() buttonEmitter: EventEmitter<string> = new EventEmitter<string>();
-
   clickedButton() {
-    this.buttonEmitter.emit('playButtonClicked');
+    location.reload();
   }
 }
